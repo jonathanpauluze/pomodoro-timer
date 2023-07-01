@@ -14,6 +14,11 @@ export const defaultTheme = {
   'green-500': '#00875F',
   'green-700': '#015F43',
 
+  'pomodoro-200': '#ff667a',
+  'pomodoro-500': '#ff4471',
+  'pomodoro-600': '#ea315a',
+  'pomodoro-700': '#d22048',
+
   'red-500': '#AB222E',
   'red-700': '#7A1921',
 
