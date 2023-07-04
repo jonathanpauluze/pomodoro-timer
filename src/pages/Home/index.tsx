@@ -4,7 +4,10 @@ import {
   CountdownContainer,
   FormContainer,
   HomeContainer,
-  Separator
+  MinuteAmountInput,
+  TaskInput,
+  Separator,
+  StartCountdownButton
 } from './styles'
 
 export const Home: FunctionComponent = () => {
@@ -13,10 +16,27 @@ export const Home: FunctionComponent = () => {
       <form>
         <FormContainer>
           <label htmlFor="task">Vou trabalhar em</label>
-          <input id="task" />
+          <TaskInput
+            id="task"
+            placeholder="Dê um nome para o seu projeto"
+            list="task-suggestions"
+          />
+          <datalist id="task-suggestions">
+            <option value="Projeto ALPHA" />
+            <option value="Projeto BETA" />
+            <option value="Projeto DELTA" />
+          </datalist>
 
           <label htmlFor="minutesAmount">Durante</label>
-          <input type="number" id="minutesAmount" />
+          <MinuteAmountInput
+            type="number"
+            id="minutesAmount"
+            placeholder="00"
+            step={5}
+            min={5}
+            max={60}
+          />
+
           <span>minutos.</span>
         </FormContainer>
 
@@ -28,10 +48,10 @@ export const Home: FunctionComponent = () => {
           <span>0</span>
         </CountdownContainer>
 
-        <button type="submit">
+        <StartCountdownButton disabled type="submit">
           <Play size={24} />
           Começar
-        </button>
+        </StartCountdownButton>
       </form>
     </HomeContainer>
   )
