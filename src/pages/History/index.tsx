@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react'
-import { HistoryContainer, HistoryList } from './styles'
+import { HistoryContainer, HistoryList, Status } from './styles'
 
 export const History: FunctionComponent = () => {
   return (
@@ -21,42 +21,54 @@ export const History: FunctionComponent = () => {
               <td>Tarefa</td>
               <td>20 minutos</td>
               <td>Há 2 meses</td>
-              <td>Concluído</td>
+              <td>
+                <Status variant="success">Concluído</Status>
+              </td>
             </tr>
 
             <tr>
               <td>Tarefa</td>
               <td>20 minutos</td>
               <td>Há 2 meses</td>
-              <td>Concluído</td>
+              <td>
+                <Status variant="success">Concluído</Status>
+              </td>
             </tr>
 
             <tr>
               <td>Tarefa</td>
               <td>20 minutos</td>
               <td>Há 2 meses</td>
-              <td>Concluído</td>
+              <td>
+                <Status variant="success">Concluído</Status>
+              </td>
             </tr>
 
             <tr>
               <td>Tarefa</td>
               <td>20 minutos</td>
               <td>Há 2 meses</td>
-              <td>Concluído</td>
+              <td>
+                <Status variant="warning">Em andamento</Status>
+              </td>
             </tr>
 
             <tr>
               <td>Tarefa</td>
               <td>20 minutos</td>
               <td>Há 2 meses</td>
-              <td>Concluído</td>
+              <td>
+                <Status variant="danger">Interrompido</Status>
+              </td>
             </tr>
 
             <tr>
               <td>Tarefa</td>
               <td>20 minutos</td>
               <td>Há 2 meses</td>
-              <td>Concluído</td>
+              <td>
+                <Status variant="success">Concluído</Status>
+              </td>
             </tr>
           </tbody>
         </table>
