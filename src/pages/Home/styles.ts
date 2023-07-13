@@ -87,7 +87,7 @@ export const MinuteAmountInput = styled(BaseInput)`
   width: 4rem;
 `
 
-export const StartCountdownButton = styled.button`
+export const BaseCountdownButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,8 +98,6 @@ export const StartCountdownButton = styled.button`
   border: 0;
   border-radius: 8px;
   font-weight: bold;
-  color: ${(props) => props.theme['gray-100']};
-  background-color: ${(props) => props.theme['pomodoro-500']};
 
   cursor: pointer;
 
@@ -107,8 +105,22 @@ export const StartCountdownButton = styled.button`
     opacity: 0.7;
     cursor: not-allowed;
   }
+`
+
+export const StartCountdownButton = styled(BaseCountdownButton)`
+  color: ${(props) => props.theme['gray-100']};
+  background-color: ${(props) => props.theme['pomodoro-500']};
 
   &:not(:disabled):hover {
     background-color: ${(props) => props.theme['pomodoro-700']};
+  }
+`
+
+export const StopCountdownButton = styled(BaseCountdownButton)`
+  color: ${(props) => props.theme['gray-100']};
+  background-color: ${(props) => props.theme['red-500']};
+
+  &:not(:disabled):hover {
+    background-color: ${(props) => props.theme['red-700']};
   }
 `

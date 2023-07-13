@@ -1,9 +1,10 @@
-import { FunctionComponent, useState } from 'react'
-import { Play } from '@phosphor-icons/react'
+import { FunctionComponent, useEffect, useState } from 'react'
+import { HandPalm, Play } from '@phosphor-icons/react'
 import { ulid } from 'ulid'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import zod from 'zod'
+import { differenceInSeconds } from 'date-fns'
 import {
   CountdownContainer,
   FormContainer,
@@ -11,7 +12,8 @@ import {
   MinuteAmountInput,
   TaskInput,
   Separator,
-  StartCountdownButton
+  StartCountdownButton,
+  StopCountdownButton
 } from './styles'
 
 const newCycleFormValidationSchema = zod.object({
@@ -29,6 +31,7 @@ interface Cycle {
   id: string
   task: string
   minutesAmount: number
+  startDate: Date
 }
 
 export const Home: FunctionComponent = () => {
@@ -50,11 +53,13 @@ export const Home: FunctionComponent = () => {
     const newCycle: Cycle = {
       id,
       task: data.task,
-      minutesAmount: data.minutesAmount
+      minutesAmount: data.minutesAmount,
+      startDate: new Date()
     }
 
     setCycles((oldCycles) => [...oldCycles, newCycle])
     setActiveCycleId(id)
+    setSecondsPassed(0)
 
     reset()
   }
@@ -73,6 +78,27 @@ export const Home: FunctionComponent = () => {
   const task = watch('task')
   const isSubmitDisabled = !task
 
+  useEffect(() => {
+    let cycleInterval: number
+
+    if (activeCycle) {
+      cycleInterval = setInterval(() => {
+        console.log(differenceInSeconds(new Date(), activeCycle.startDate))
+        setSecondsPassed(differenceInSeconds(new Date(), activeCycle.startDate))
+      }, 1000)
+    }
+
+    return () => {
+      clearInterval(cycleInterval)
+    }
+  }, [activeCycle])
+
+  useEffect(() => {
+    if (activeCycle) {
+      document.title = `${minutes}:${seconds}`
+    }
+  }, [activeCycle, minutes, seconds])
+
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)}>
@@ -82,6 +108,7 @@ export const Home: FunctionComponent = () => {
             id="task"
             placeholder="Dê um nome para o seu projeto"
             list="task-suggestions"
+            disabled={!!activeCycle}
             {...register('task')}
           />
           <datalist id="task-suggestions">
@@ -98,6 +125,7 @@ export const Home: FunctionComponent = () => {
             step={5}
             min={5}
             max={60}
+            disabled={!!activeCycle}
             {...register('minutesAmount', {
               valueAsNumber: true
             })}
@@ -114,10 +142,17 @@ export const Home: FunctionComponent = () => {
           <span>{seconds[1]}</span>
         </CountdownContainer>
 
-        <StartCountdownButton disabled={isSubmitDisabled} type="submit">
-          <Play size={24} />
-          Começar
-        </StartCountdownButton>
+        {activeCycle ? (
+          <StopCountdownButton type="button">
+            <HandPalm size={24} />
+            Interromper
+          </StopCountdownButton>
+        ) : (
+          <StartCountdownButton disabled={isSubmitDisabled} type="submit">
+            <Play size={24} />
+            Começar
+          </StartCountdownButton>
+        )}
       </form>
     </HomeContainer>
   )
