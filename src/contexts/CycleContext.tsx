@@ -55,8 +55,6 @@ export const CyclesContextProvider: FunctionComponent<PropsWithChildren> = ({
     setCycles((oldCycles) => [...oldCycles, newCycle])
     setActiveCycleId(id)
     setSecondsPassed(0)
-
-    // newCycleForm.reset()
   }
 
   function interruptCurrentCycle() {
