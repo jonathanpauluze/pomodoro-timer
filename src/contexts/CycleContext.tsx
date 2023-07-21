@@ -34,7 +34,7 @@ export const CyclesContext = createContext({} as CyclesContextType)
 export const CyclesContextProvider: FunctionComponent<PropsWithChildren> = ({
   children
 }) => {
-  const [cyclesState, dispatchCycles] = useReducer(cyclesReducer, {
+  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
     cycles: [],
     activeCycleId: null
   })
@@ -54,16 +54,16 @@ export const CyclesContextProvider: FunctionComponent<PropsWithChildren> = ({
       startDate: new Date()
     }
 
-    dispatchCycles(addNewCycleAction(newCycle))
+    dispatch(addNewCycleAction(newCycle))
     setSecondsPassed(0)
   }
 
   function interruptCurrentCycle() {
-    dispatchCycles(interruptCurrentCycleAction())
+    dispatch(interruptCurrentCycleAction())
   }
 
   function markCurrentCycleAsFinished() {
-    dispatchCycles(markCurrentCycleAsFinishedAction())
+    dispatch(markCurrentCycleAsFinishedAction())
   }
 
   function updateSecondsPassed(seconds: number) {
