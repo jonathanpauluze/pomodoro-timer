@@ -2,6 +2,7 @@ import {
   FunctionComponent,
   PropsWithChildren,
   createContext,
+  useReducer,
   useState
 } from 'react'
 import { ulid } from 'ulid'
@@ -33,13 +34,66 @@ interface CyclesContextType {
 
 export const CyclesContext = createContext({} as CyclesContextType)
 
+interface CyclesState {
+  cycles: Cycle[]
+  activeCycleId: string | null
+}
+
 export const CyclesContextProvider: FunctionComponent<PropsWithChildren> = ({
   children
 }) => {
-  const [cycles, setCycles] = useState<Cycle[]>([])
-  const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+  const [cyclesState, dispatchCycles] = useReducer(
+    (state: CyclesState, action: any) => {
+      switch (action.type) {
+        case 'ADD_NEW_CYCLE':
+          return {
+            ...state,
+            cycles: [...state.cycles, action.payload.newCycle],
+            activeCycleId: action.payload.newCycle.id
+          }
+        case 'INTERRUPT_CURRENT_CYCLE':
+          return {
+            ...state,
+            cycles: state.cycles.map((cycle) => {
+              if (cycle.id === state.activeCycleId) {
+                return {
+                  ...cycle,
+                  interruptedDate: new Date()
+                }
+              }
+
+              return cycle
+            }),
+            activeCycleId: null
+          }
+        case 'MARK_CURRENT_CYCLE_AS_FINISED':
+          return {
+            ...state,
+            cycles: state.cycles.map((cycle) => {
+              if (cycle.id === state.activeCycleId) {
+                return {
+                  ...cycle,
+                  finishedDate: new Date()
+                }
+              }
+
+              return cycle
+            }),
+            activeCycleId: null
+          }
+        default:
+          return state
+      }
+    },
+    {
+      cycles: [],
+      activeCycleId: null
+    }
+  )
+
   const [secondsPassed, setSecondsPassed] = useState<number>(0)
 
+  const { cycles, activeCycleId } = cyclesState
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
 
   function createNewCycle(data: CreateCycleData) {
@@ -52,40 +106,24 @@ export const CyclesContextProvider: FunctionComponent<PropsWithChildren> = ({
       startDate: new Date()
     }
 
-    setCycles((oldCycles) => [...oldCycles, newCycle])
-    setActiveCycleId(id)
+    dispatchCycles({
+      type: 'ADD_NEW_CYCLE',
+      payload: { newCycle }
+    })
     setSecondsPassed(0)
   }
 
   function interruptCurrentCycle() {
-    setCycles((oldCycles) => {
-      return oldCycles.map((oldCycle) => {
-        if (oldCycle.id === activeCycleId) {
-          return {
-            ...oldCycle,
-            interruptedDate: new Date()
-          }
-        }
-
-        return oldCycle
-      })
+    dispatchCycles({
+      type: 'INTERRUPT_CURRENT_CYCLE',
+      payload: { activeCycleId }
     })
-
-    setActiveCycleId(null)
   }
 
   function markCurrentCycleAsFinished() {
-    setCycles((oldCycles) => {
-      return oldCycles.map((cycle) => {
-        if (cycle.id === activeCycleId) {
-          return {
-            ...cycle,
-            finishedDate: new Date()
-          }
-        }
-
-        return cycle
-      })
+    dispatchCycles({
+      type: 'MARK_CURRENT_CYCLE_AS_FINISED',
+      payload: { activeCycleId }
     })
   }
 
