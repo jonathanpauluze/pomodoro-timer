@@ -17,7 +17,7 @@ interface Cycle {
   minutesAmount: number
   startDate: Date
   interruptedDate?: Date
-  finishedData?: Date
+  finishedDate?: Date
 }
 
 interface CyclesContextType {
